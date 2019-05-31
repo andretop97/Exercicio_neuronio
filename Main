@@ -1,0 +1,76 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+
+def plotar(w1,w2,bias,title):
+    xvals = np.arange(-1, 3, 0.01)     
+    newyvals = (((xvals * w2) * - 1) - bias) / w1
+    plt.plot(xvals, newyvals, 'r-')    
+    plt.title(title)
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.axis([-1,2,-1,2])
+    plt.plot([0,1,0],[0,0,1], 'b^')
+    plt.plot([1],[1], 'go')
+    plt.xticks([0,1])
+    plt.yticks([0,1])
+    plt.show()
+def funcao_ativacao(u):
+    return 1 if u>0 else -1
+
+def reta(w,Xi,b):
+    u = 0
+    for i in range(len(w)):
+        u = u + w[i]*Xi[i]
+    u = u + b 
+    return  u
+
+def soma_escalar(vetor, const):
+    novo_vet = vetor
+    for i in range(len(vetor)):
+        novo_vet[i] = vetor[i] + const
+    return novo_vet
+
+
+def conta_erro(erro):
+    numero_erro = 0
+    for i in erro:
+        if i != 0 :
+            numero_erro = numero_erro + 1
+    return  numero_erro
+
+#def adaline():
+#   print()
+
+def perceptron(max_it , E, alpha, X, d):
+        w = [random.random() for i in range(len(X[0]))]
+        b = random.random()
+
+        t = 1
+        while t < max_it and E > 0 :
+            e = []
+            for i in range(len(X)):
+                y =funcao_ativacao(reta(w,X[i],b))
+                print(y)
+                e.append(d[i] - y)
+                for aux in range(len(w)):
+                    w[aux] = w[aux] + alpha *e[i]*X[i][aux]
+                b = b + (alpha * e[i])
+            print("batata")
+            E = conta_erro(e)
+            t = t + 1
+        return(w,b)
+def main():
+    X = [[1,1],[1,0],[0,1],[0,0]]
+    d = [1,-1,-1,-1]
+    
+    # Implemente a função Adaline que deve retornar o vetor de pesos e o bias, respectivamente.
+    #w, bias = adaline(max_it=100, Epsilon=.0000001, alpha=.1, X=X, d=d)
+    #plotar(w[0],w[1],bias,"Porta lógica AND com Adaline")
+    
+    # Implemente a função Percepton que deve retornar o vetor de pesos e o bias, respectivamente.
+    w, bias = perceptron(max_it=100, E=1, alpha=.1, X=X, d=d)
+    plotar(w[0],w[1],bias,"Porta lógica AND com Perceptron")
+
+if __name__ == '__main__':
+    main()
