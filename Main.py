@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import math
 
 
 def plotar(w1,w2,bias,title):
@@ -22,12 +23,16 @@ def funcao_ativacao(u):
     return 1 if u>0 else -1
 
 
-def reta(w,Xi,b):
+def funcao_tgH(u):
+    return math.tanh(u)
+
+
+def reta(w, Xi, b):
     u = 0
     for i in range(len(w)):
-        u = u + w[i]*Xi[i]
+        u = u + w[i] * Xi[i]
     u = u + b 
-    return  u
+    return u
 
 
 def soma_escalar(vetor, const):
@@ -64,13 +69,34 @@ def conta_erro(erro):
             numero_erro = numero_erro + 1
     return  numero_erro
 
-#def adaline():
-#   print()
+
+def erro_quadratico_medio(Erro):
+    return pow(sum(Erro),2)/len(Erro)
+
+
+def adaline(max_it, Epsilon, alpha, X, d):
+    w = [random.choice([0,1]) for i in range(len(X[0]))]
+    b = random.choice([0, 1])
+    t = 1
+    validacao = True
+    while validacao:
+        e = []
+        for i in range(len(X)):
+            y = funcao_tgH(reta(w, X[i], b))
+            e.append(d[i]-y)
+            w = soma_vetorial(w,mul_escalar(X[i],e[i]*alpha))
+            b = b + alpha * e[i]
+        MSE = erro_quadratico_medio(e)
+        t = t + 1
+        print(MSE)
+        validacao = t < max_it and MSE > Epsilon
+    return (w, b)
+
 
 
 def perceptron(max_it , E, alpha, X, d):
-        w = [random.random() for i in range(len(X[0]))]
-        b = random.random()
+        w = [random.choice([0,1]) for i in range(len(X[0]))]
+        b = random.choice([0,1])
 
         t = 1
         while t < max_it and E > 0 :
@@ -82,6 +108,7 @@ def perceptron(max_it , E, alpha, X, d):
                 b = b + (alpha * e[i])
             E = conta_erro(e)
             t = t + 1
+            print(w,b)
         return(w,b)
 
 def teste():
@@ -101,12 +128,12 @@ def main():
     d = [1,-1,-1,-1]
     
     # Implemente a função Adaline que deve retornar o vetor de pesos e o bias, respectivamente.
-    #w, bias = adaline(max_it=100, Epsilon=.0000001, alpha=.1, X=X, d=d)
-    #plotar(w[0],w[1],bias,"Porta lógica AND com Adaline")
+    w, bias = adaline(max_it=100, Epsilon=.0000001, alpha=.1, X=X, d=d)
+    plotar(w[0],w[1],bias,"Porta lógica AND com Adaline")
     
     # Implemente a função Percepton que deve retornar o vetor de pesos e o bias, respectivamente.
-    w, bias = perceptron(max_it=100, E=1, alpha=.1, X=X, d=d)
-    plotar(w[0],w[1],bias,"Porta lógica AND com Perceptron")
+    #w, bias = perceptron(max_it=100, E=1, alpha=.1, X=X, d=d)
+    #plotar(w[0],w[1],bias,"Porta lógica AND com Perceptron")
 
 if __name__ == '__main__':
     main()
