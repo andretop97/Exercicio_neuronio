@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
+
 def plotar(w1,w2,bias,title):
     xvals = np.arange(-1, 3, 0.01)     
     newyvals = (((xvals * w2) * - 1) - bias) / w1
@@ -15,8 +16,11 @@ def plotar(w1,w2,bias,title):
     plt.xticks([0,1])
     plt.yticks([0,1])
     plt.show()
+
+
 def funcao_ativacao(u):
     return 1 if u>0 else -1
+
 
 def reta(w,Xi,b):
     u = 0
@@ -25,11 +29,32 @@ def reta(w,Xi,b):
     u = u + b 
     return  u
 
+
 def soma_escalar(vetor, const):
     novo_vet = vetor
     for i in range(len(vetor)):
         novo_vet[i] = vetor[i] + const
     return novo_vet
+
+
+def soma_vetorial(Vetor1,Vetor2):
+    vetor_resultante =[0]*len(Vetor1)
+    for i in range(len(Vetor1)):
+        vetor_resultante[i] = Vetor1[i] + Vetor2[i]
+    return vetor_resultante
+
+def mul_escalar(Vetor1, const):
+    vetor_resultante = [0]*len(Vetor1)
+    for i in range(len(Vetor1)):
+        vetor_resultante[i] = Vetor1[i]*const
+    return vetor_resultante
+
+
+def mul_ele_vetor(Vetor1,Vetor2):
+    vetor_resultante = [0]*len(Vetor1)
+    for i in range(len(Vetor1)):
+        vetor_resultante[i] = Vetor1[i] * Vetor2[i]
+    return vetor_resultante
 
 
 def conta_erro(erro):
@@ -42,6 +67,7 @@ def conta_erro(erro):
 #def adaline():
 #   print()
 
+
 def perceptron(max_it , E, alpha, X, d):
         w = [random.random() for i in range(len(X[0]))]
         b = random.random()
@@ -51,15 +77,25 @@ def perceptron(max_it , E, alpha, X, d):
             e = []
             for i in range(len(X)):
                 y =funcao_ativacao(reta(w,X[i],b))
-                print(y)
                 e.append(d[i] - y)
-                for aux in range(len(w)):
-                    w[aux] = w[aux] + alpha *e[i]*X[i][aux]
+                w = soma_vetorial(w,mul_escalar(X[i],e[i]*alpha))
                 b = b + (alpha * e[i])
-            print("batata")
             E = conta_erro(e)
             t = t + 1
         return(w,b)
+
+def teste():
+    teste1 =[1,2,3]
+    teste2 =[4,5,6]
+    teste3 = soma_vetorial(teste1,teste2)
+    teste4 = mul_escalar(teste1,2)
+    teste5 = mul_ele_vetor(teste1,teste2)
+
+    print("soma de vetores",teste3)
+    print("multiplicação por escalar", teste4)
+    print("multiplica elemento a elemento entre vetores", teste5)
+
+
 def main():
     X = [[1,1],[1,0],[0,1],[0,0]]
     d = [1,-1,-1,-1]
