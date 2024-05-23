@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import math
-from sklearn.metrics import mean_squared_error
+from matplotlib.animation import FuncAnimation
+# from sklearn.metrics import mean_squared_error
 
 
 def plotar(w1,w2,bias,title):
@@ -21,7 +22,7 @@ def plotar(w1,w2,bias,title):
 
 
 def funcao_ativacao(u):
-    return 1 if u>0 else -1
+    return 1 if u > 0 else -1
 
 
 def funcao_tgH(u):
@@ -74,7 +75,7 @@ def mul_ele_vetor(Vetor1,Vetor2):
 def conta_erro(erro):
     numero_erro = 0
     for i in erro:
-            numero_erro = numero_erro + 1
+            numero_erro += numero_erro
     return  numero_erro
 
 
@@ -90,7 +91,7 @@ def adaline(max_it, Epsilon, alpha, X, d):
     w = [random.random() for i in range(len(X[0]))]
     b = random.random()
     t = 1
-    e = [0 for x in range(len(X))] # [1]*len(X)
+    e = [x for x in range(len(X))] # [1]*len(X)
     validacao = True
     while validacao:
         MSEi = erro_quadratico_medio(e)
@@ -99,11 +100,14 @@ def adaline(max_it, Epsilon, alpha, X, d):
             e[i] = d[i] - y
             w = soma_vetorial(w, mul_escalar(X[i], e[i]*alpha))
             b = b + alpha * e[i]
+
         MSEf = erro_quadratico_medio(e)
+        plotar(w[0],w[1],b,"Porta lógica AND com Adaline")
+
         t = t + 1
         delta_MSE = abs(MSEf-MSEi)
         validacao = t < max_it and delta_MSE > Epsilon
-    print(f'Iterações: {t}, Delta_MSE: {delta_MSE}')
+        print(f'Iterações: {t}, Delta_MSE: {delta_MSE: .5f}')
     return w, b
 
 
@@ -119,7 +123,7 @@ def perceptron(max_it, E, alpha, X, d):
                 e.append(d[i] - y)
                 w = soma_vetorial(w, mul_escalar(X[i], e[i]*alpha))
                 b = b + (alpha * e[i])
-            E = conta_erro(e)
+            E = len(e)
             t = t + 1
             print(w, b)
         return w,b
@@ -143,7 +147,7 @@ def main():
     
     # Implemente a função Adaline que deve retornar o vetor de pesos e o bias, respectivamente.
     w, bias = adaline(max_it=100, Epsilon=.0000001, alpha=.1, X=X, d=d)
-    plotar(w[0],w[1],bias,"Porta lógica AND com Adaline")
+    # plotar(w[0],w[1],bias,"Porta lógica AND com Adaline")
     
     # Implemente a função Percepton que deve retornar o vetor de pesos e o bias, respectivamente.
     # w, bias = perceptron(max_it=100, E=1, alpha=.1, X=X, d=d)
