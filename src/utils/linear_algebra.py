@@ -1,11 +1,3 @@
-def reta(w, Xi, b):
-    u = 0
-    for i in range(len(w)):
-        u = u + w[i] * Xi[i]
-    u = u + b 
-    return u
-
-
 def soma_escalar(vetor, const):
     novo_vet = vetor
     for i in range(len(vetor)):
