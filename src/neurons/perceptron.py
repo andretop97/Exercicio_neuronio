@@ -6,6 +6,10 @@ from src.activation_functions.bipolar_step import BipolarStep
 
 
 class Perceptron(Neuron):
+    def __init__(self, activate_function: ActivationFunction = BipolarStep()) -> None:
+        super().__init__()
+        self.activate_function: ActivationFunction = activate_function
+
     def _varible_initializer(self, train_inputs: list[list[float]]) -> None:
         self._set_initial_shape(train_inputs)
         self._set_initial_weights()
@@ -23,13 +27,16 @@ class Perceptron(Neuron):
     def _recalculateWeights(self, train_input: list[float], decision_erro: list[float], learning_rate: float) -> None:
         self.weights = soma_vetorial(self.weights, multiplicacao_escalar(train_input, decision_erro * learning_rate))
 
-    def _calculateInference(self, train_input) -> float:
+    def batata(self, train_input) -> float:
         signal = 0
         for i in range(self.shape[1]):
             signal += self.weights[i] * train_input[i]
         signal += self.bias 
         return signal
-    
+    def _calculateInference(self,train_input ) -> float:
+        pre_activation_value = self.batata(train_input)
+        return self.activate_function.calculate(pre_activation_value)
+        
     def doTrain(
             self, 
             train_inputs: list[list[float]], 
@@ -37,7 +44,6 @@ class Perceptron(Neuron):
             max_iterations: int = 100, 
             threshold: float = 0, 
             learning_rate: float = 0.01,
-            activate_function: ActivationFunction = BipolarStep()
             ) -> tuple[float, float]:
         
         self._varible_initializer(train_inputs)
@@ -47,9 +53,8 @@ class Perceptron(Neuron):
         while epoch < max_iterations and loss < threshold:
             decision_erro_list: list[float] = []
             for i in range(self.shape[0]):
-                pre_activation_value = self._calculateInference(train_inputs[i])
-                decision_value = activate_function.calculate(pre_activation_value)
-                decision_erro_list.append(train_inputs_validation[i] - decision_value)
+                predicted_value = self._calculateInference(train_inputs[i])
+                decision_erro_list.append(train_inputs_validation[i] - predicted_value)
                 self._recalculateWeights(train_inputs[i], decision_erro_list[i], learning_rate)
                 self.bias = self.bias + (learning_rate * decision_erro_list[i])
             loss = sum(decision_erro_list)
@@ -58,6 +63,6 @@ class Perceptron(Neuron):
         return self.weights, self.bias
 
 
-    def predict() -> int:
-        pass
+    def predict(self) -> float:
+        return self.batata
 
