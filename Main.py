@@ -125,7 +125,6 @@ def perceptron(max_it, E, alpha, X, d):
                 b = b + (alpha * e[i])
             E = len(e)
             t = t + 1
-            print(w, b)
         return w,b
 
 

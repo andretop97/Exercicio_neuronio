@@ -5,7 +5,7 @@ def soma_escalar(vetor, const):
     return novo_vet
 
 
-def soma_vetorial(Vetor1, Vetor2):
+def soma_vetorial(Vetor1, Vetor2) -> float:
     vetor_resultante = [0]*len(Vetor1)
     for i in range(len(Vetor1)):
         vetor_resultante[i] = Vetor1[i] + Vetor2[i]
